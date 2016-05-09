@@ -17,7 +17,7 @@
 
 import math
 import numpy as np
-from pykdtree.kdtree import KDTree
+from scipy.spatial import KDTree
 
 # with numba we get significant speedups
 try: 

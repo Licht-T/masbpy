@@ -24,7 +24,7 @@ except:
 
 
 def compute_lfs(datadict, k=10):
-    from pykdtree.kdtree import KDTree
+    from scipy.spatial import KDTree
 
     # collect all ma_coords that are not NaN
     ma_coords = np.concatenate([datadict['ma_coords_in'], datadict['ma_coords_out']])

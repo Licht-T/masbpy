@@ -18,7 +18,7 @@
 #!/usr/bin/env python
 
 from sklearn.decomposition import PCA
-from pykdtree.kdtree import KDTree
+from scipy.spatial import KDTree
 from multiprocessing import Pool
 from time import time
 from masbpy import io_npy

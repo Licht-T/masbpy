@@ -20,7 +20,7 @@ from numpy import array, zeros, concatenate, nan
 import numpy as np
 from itertools import chain
 
-from pykdtree.kdtree import KDTree
+from scipy.spatial import KDTree
 
 from multiprocessing import Process, Pool, cpu_count, Manager
 from multiprocessing.queues import Queue
