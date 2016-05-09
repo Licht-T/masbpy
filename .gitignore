@@ -10,3 +10,4 @@ masbpy/ma.pyc
 util/my_data_npy
 util/out
 *~
+*.bak
