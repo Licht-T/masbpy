@@ -48,7 +48,7 @@ def read_ply(infile, limit_points=0, move_to_origin=False, read_normals=True):
 		datadict['normals'] = []
 		if limit_points:
 			vertexcount = limit_points
-		for i in xrange(int(vertexcount)):
+		for i in range(int(vertexcount)):
 			line = f.readline()
 
 			
@@ -65,7 +65,7 @@ def read_ply(infile, limit_points=0, move_to_origin=False, read_normals=True):
 
 		if facecount is not None:
 			datadict['faces'] = []
-			for i in xrange(int(facecount)):
+			for i in range(int(facecount)):
 				line = f.readline().split()
 				vertex_ids = [int(x) for x in line[1:]]
 				datadict['faces'].append(vertex_ids)

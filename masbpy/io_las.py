@@ -21,7 +21,7 @@ def read_las(infile, keys=None):
 	try:
 		from laspy.file import File
 	except ImportError:
-		print "Cannot read las files without laspy module"
+		print("Cannot read las files without laspy module")
 		raise
 
 	inFile = File(infile)

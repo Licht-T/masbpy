@@ -27,9 +27,9 @@ from multiprocessing.queues import Queue
 
 try: 
     import numba
-    from algebra_numba import norm, dot, equal, compute_radius, cos_angle
+    from .algebra_numba import norm, dot, equal, compute_radius, cos_angle
 except:
-    from algebra import norm, dot, equal, compute_radius, cos_angle
+    from .algebra import norm, dot, equal, compute_radius, cos_angle
 
 import math
 
@@ -43,7 +43,7 @@ class MASB(object):
         self.D = datadict # dict of numpy arrays
         self.m, self.n = datadict['coords'].shape
 
-        if datadict.has_key('coords_in_buffer'):
+        if 'coords_in_buffer' in datadict:
             self.kd_tree = KDTree(concatenate([self.D['coords'], self.D['coords_in_buffer']]))
         else:
             self.kd_tree = KDTree(self.D['coords'])
@@ -54,7 +54,7 @@ class MASB(object):
         self.detect_planar = detect_planar
     
     def compute_sp(self):
-        from Queue import Queue
+        from queue import Queue
         queue = Queue()
         datalen = len(self.D['coords'])
         self(queue,0,datalen, True, False)
@@ -68,14 +68,14 @@ class MASB(object):
         batchsize = datalen/n
         chunk_bounds = []
         end=0
-        for i in xrange(n-1):
+        for i in range(n-1):
             start = end
             end = (i+1)* batchsize -1
             chunk_bounds.append( (start, end) )
         start, end = end, datalen
         chunk_bounds.append((start, end))
 
-        print "chunking at:", chunk_bounds
+        print("chunking at:", chunk_bounds)
 
         jobs = []
         queue = self.manager.Queue()
@@ -98,7 +98,7 @@ class MASB(object):
 
         t2 = time()
 
-        print "Finished ma computation in {} s".format(t2-t1)
+        print("Finished ma computation in {} s".format(t2-t1))
 
         result.sort(key=lambda item: (item[1], item[0]))
 
@@ -112,13 +112,13 @@ class MASB(object):
         self.D['ma_f2_in'] = concatenate([ma_f2 for start, inner, ma_coords, ma_f2 in result[n:] ])
         # self.D['ma_shrinkhist_in'] = list(chain(*[shrinkhist for start, inner, ma_coords, ma_radii, ma_f2, shrinkhist in result[n:] ]))
         
-        print "Finished datamerging in {} s".format(time()-t2)
+        print("Finished datamerging in {} s".format(time()-t2))
 
     # @autojit
     # @profile
     def __call__(self, queue, start, end, inner=True, verbose=False):
         """Balls shrinking algorithm. Set `inner` to False when outer balls are wanted."""
-        print 'processing', start, end, "inner:", inner#, hex(id(self.kd_tree)), hex(id(self.D))
+        print('processing', start, end, "inner:", inner)#, hex(id(self.kd_tree)), hex(id(self.D))
         m = end-start
         ma_coords = zeros((m, self.n), dtype=np.float32)
         ma_coords[:] = nan
@@ -134,7 +134,7 @@ class MASB(object):
             self.detect_planar = (math.pi/180)*self.detect_planar
         # q_history_list = []
         ZeroDivisionError_cnt = 0
-        for i, pi in enumerate(xrange(start,end)):
+        for i, pi in enumerate(range(start,end)):
             p, n = self.D['coords'][pi], self.D['normals'][pi]
             # print "for", p, n
 
@@ -152,7 +152,7 @@ class MASB(object):
             # forget optimization of r:
             r=self.SuperR
             
-            if verbose: print 'initial r: ' + str(r)
+            if verbose: print('initial r: ' + str(r))
 
             r_ = None
             c = None
@@ -201,7 +201,7 @@ class MASB(object):
                 elif r_ > self.SuperR:
                     r_ = self.SuperR
                     break
-                if verbose: print 'current ball: ' + str(i) +' - ' + str(r_)
+                if verbose: print('current ball: ' + str(i) +' - ' + str(r_))
 
                 c_ = p - n*r_
                 if self.denoise != None:
@@ -231,7 +231,7 @@ class MASB(object):
 
                 # stop iteration if this looks like an infinite loop:
                 if j > 30:
-                    if verbose: print "breaking possible infinite loop at j=30"
+                    if verbose: print("breaking possible infinite loop at j=30")
                     break
 
             if r_ >= self.SuperR or r_ == None:
@@ -245,5 +245,5 @@ class MASB(object):
         result = ( start, inner, ma_coords, ma_f2 )
         queue.put( result )
 
-        print '{} ZeroDivisionErrors'.format(ZeroDivisionError_cnt)
-        print "done!", start, inner, "len:", ma_coords.shape
+        print('{} ZeroDivisionErrors'.format(ZeroDivisionError_cnt))
+        print("done!", start, inner, "len:", ma_coords.shape)

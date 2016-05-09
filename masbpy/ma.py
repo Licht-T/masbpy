@@ -22,9 +22,9 @@ from scipy.spatial import KDTree
 # with numba we get significant speedups
 try: 
     import numba
-    from algebra_numba import norm, dot, equal, compute_radius, cos_angle
+    from .algebra_numba import norm, dot, equal, compute_radius, cos_angle
 except:
-    from algebra import norm, dot, equal, compute_radius, cos_angle
+    from .algebra import norm, dot, equal, compute_radius, cos_angle
 
 # FIXME: can't handle duplicate points in input
 
@@ -75,7 +75,7 @@ class MASB(object):
         """Balls shrinking algorithm. Set `inner` to False when outer balls are wanted."""
 
         # iterate over all point-normal pairs
-        for p_i in xrange(self.m):
+        for p_i in range(self.m):
             p, n = self.D['coords'][p_i], self.D['normals'][p_i]
             #-- p is the point along whose normal n we are shrinking a ball, its index is p_i
             
@@ -121,7 +121,7 @@ class MASB(object):
                 try:
                     candidate_c = self.D['coords'][indices]
                 except IndexError as detail:
-                    print detail, indices, dists
+                    print(detail, indices, dists)
                     import pdb; pdb.set_trace()
                     raise
 

@@ -18,9 +18,9 @@
 import numpy as np
 try: 
     import numba
-    from algebra_numba import norm, dot, equal, compute_radius, cos_angle
+    from .algebra_numba import norm, dot, equal, compute_radius, cos_angle
 except:
-    from algebra import norm, dot, equal, compute_radius, cos_angle
+    from .algebra import norm, dot, equal, compute_radius, cos_angle
 
 
 def compute_lfs(datadict, k=10):
